@@ -1,23 +1,247 @@
 package textoise;
 
+import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.PrintWriter;
 
 public class MainFrame extends javax.swing.JFrame {
-    File archive;
-    String appData = System.getenv("APPDATA")+"/Textoise/temporary.txt";
+
+    File textFile = null;
+    boolean textSaved = true;
     
-    private static void lookAndFeel() {
+    public MainFrame() {
+        initComponents();
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("Textoise.png")));
+        //LoadFont();
+    }
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+        taText = new javax.swing.JTextArea();
+        tfPath = new javax.swing.JTextField();
+        lbSaveStatus = new javax.swing.JLabel();
+        menuBar = new javax.swing.JMenuBar();
+        menuFile = new javax.swing.JMenu();
+        miNew = new javax.swing.JMenuItem();
+        miOpen = new javax.swing.JMenuItem();
+        miSave = new javax.swing.JMenuItem();
+        miSaveAs = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        miExit = new javax.swing.JMenuItem();
+        jMenu1 = new javax.swing.JMenu();
+        miFont = new javax.swing.JMenuItem();
+        miTheme = new javax.swing.JMenuItem();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Textoise");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
+
+        taText.setBackground(new java.awt.Color(51, 51, 51));
+        taText.setColumns(20);
+        taText.setFont(new java.awt.Font("Consolas", 0, 12)); // NOI18N
+        taText.setForeground(new java.awt.Color(255, 255, 255));
+        taText.setRows(5);
+        taText.setCaretColor(new java.awt.Color(255, 255, 255));
+        taText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                taTextKeyPressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(taText);
+
+        tfPath.setEditable(false);
+
+        lbSaveStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/stSaveEmpty.png"))); // NOI18N
+
+        menuFile.setText("Arquivo");
+
+        miNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/New.png"))); // NOI18N
+        miNew.setText("Novo");
+        miNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miNewActionPerformed(evt);
+            }
+        });
+        menuFile.add(miNew);
+
+        miOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Open.png"))); // NOI18N
+        miOpen.setText("Abrir");
+        miOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miOpenActionPerformed(evt);
+            }
+        });
+        menuFile.add(miOpen);
+
+        miSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Save.png"))); // NOI18N
+        miSave.setText("Salvar");
+        miSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miSaveActionPerformed(evt);
+            }
+        });
+        menuFile.add(miSave);
+
+        miSaveAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        miSaveAs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/SaveAs.png"))); // NOI18N
+        miSaveAs.setText("Salvar como");
+        miSaveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miSaveAsActionPerformed(evt);
+            }
+        });
+        menuFile.add(miSaveAs);
+        menuFile.add(jSeparator1);
+
+        miExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
+        miExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Exit.png"))); // NOI18N
+        miExit.setText("Sair");
+        menuFile.add(miExit);
+
+        menuBar.add(menuFile);
+
+        jMenu1.setText("Configurações");
+
+        miFont.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Font.png"))); // NOI18N
+        miFont.setText("Fonte");
+        miFont.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miFontActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miFont);
+
+        miTheme.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Theme.png"))); // NOI18N
+        miTheme.setText("Tema");
+        miTheme.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miThemeActionPerformed(evt);
+            }
+        });
+        jMenu1.add(miTheme);
+
+        menuBar.add(jMenu1);
+
+        setJMenuBar(menuBar);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbSaveStatus)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfPath)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tfPath, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbSaveStatus))
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void miNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNewActionPerformed
+        NewText();
+    }//GEN-LAST:event_miNewActionPerformed
+
+    private void miSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSaveAsActionPerformed
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            SaveAs();
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao tentar realizar operação!\n"+ex);
+        }
+    }//GEN-LAST:event_miSaveAsActionPerformed
+
+    private void miSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSaveActionPerformed
+        try {
+            Save();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao tentar realizar operação!\n"+e);
+        }
+    }//GEN-LAST:event_miSaveActionPerformed
+
+    private void taTextKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_taTextKeyPressed
+        if (evt.getKeyCode() != KeyEvent.VK_CONTROL) {
+            changeSaved(false);
+        }
+        
+    }//GEN-LAST:event_taTextKeyPressed
+
+    private void miOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOpenActionPerformed
+        Open();
+    }//GEN-LAST:event_miOpenActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if(!textSaved){
+            int choice = JOptionPane.showConfirmDialog(rootPane, "Salvar alterações do texto atual?", "Textoise", JOptionPane.YES_NO_CANCEL_OPTION);
+            if(choice == 0){
+                try {
+                    Save();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao tentar realizar operação!\n"+ex);
+                }
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            }
+            if(choice == 1){
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            }
+            if(choice == 2){
+                setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+            }
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void miFontActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miFontActionPerformed
+        Font oldFont = taText.getFont();
+        FontFrame ff = new  FontFrame(oldFont, this);
+        ff.setVisible(true);
+    }//GEN-LAST:event_miFontActionPerformed
+
+    private void miThemeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miThemeActionPerformed
+        ThemeFrame tf = new ThemeFrame(taText.getForeground(), taText.getBackground(), this);
+        tf.setVisible(true);
+    }//GEN-LAST:event_miThemeActionPerformed
+    
+    public void run() {
+        LookAndFeel();
+    }
+
+    private void LookAndFeel() {
+        try {
+            for (var info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
@@ -29,302 +253,179 @@ public class MainFrame extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             new MainFrame().setVisible(true);
         });
-    }
-
-    public MainFrame() {
-        initComponents();
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("Textoise.png")));
-        archive = null;
-        try {
-            temporaryText();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(rootPane, "Erro ao manipular arquivo temporário!\n"+e);
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        scrollPane = new javax.swing.JScrollPane();
-        textArea = new javax.swing.JTextArea();
-        menuBar = new javax.swing.JMenuBar();
-        menuFiles = new javax.swing.JMenu();
-        miNew = new javax.swing.JMenuItem();
-        miOpen = new javax.swing.JMenuItem();
-        miSave = new javax.swing.JMenuItem();
-        miSaveAs = new javax.swing.JMenuItem();
-        separator = new javax.swing.JPopupMenu.Separator();
-        miExit = new javax.swing.JMenuItem();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Textoise");
-        setLocation(new java.awt.Point(50, 50));
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
-
-        textArea.setBackground(new java.awt.Color(51, 51, 51));
-        textArea.setColumns(20);
-        textArea.setFont(new java.awt.Font("Consolas", 0, 14)); // NOI18N
-        textArea.setForeground(new java.awt.Color(255, 255, 255));
-        textArea.setRows(5);
-        textArea.setCaretColor(new java.awt.Color(204, 204, 204));
-        scrollPane.setViewportView(textArea);
-
-        menuBar.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        menuFiles.setText("Arquivo");
-
-        miNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        miNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/New.png"))); // NOI18N
-        miNew.setText("Novo");
-        miNew.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miNewActionPerformed(evt);
-            }
-        });
-        menuFiles.add(miNew);
-
-        miOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        miOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Open.png"))); // NOI18N
-        miOpen.setText("Abrir");
-        miOpen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miOpenActionPerformed(evt);
-            }
-        });
-        menuFiles.add(miOpen);
-
-        miSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        miSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Save.png"))); // NOI18N
-        miSave.setText("Salvar");
-        miSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miSaveActionPerformed(evt);
-            }
-        });
-        menuFiles.add(miSave);
-
-        miSaveAs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.SHIFT_DOWN_MASK | java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        miSaveAs.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/SaveAs.png"))); // NOI18N
-        miSaveAs.setText("Salvar como");
-        menuFiles.add(miSaveAs);
-        menuFiles.add(separator);
-
-        miExit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_DOWN_MASK));
-        miExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Exit.png"))); // NOI18N
-        miExit.setText("Sair");
-        miExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miExitActionPerformed(evt);
-            }
-        });
-        menuFiles.add(miExit);
-
-        menuBar.add(menuFiles);
-
-        setJMenuBar(menuBar);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 650, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-    public void windowClosing(WindowEvent e) {
-        JOptionPane.showMessageDialog(rootPane, "AEE");
-    }
-    
-    private void miNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miNewActionPerformed
-        newFile();
-    }//GEN-LAST:event_miNewActionPerformed
-
-    private void miOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miOpenActionPerformed
-        openFile();
-    }//GEN-LAST:event_miOpenActionPerformed
-
-    private void miExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miExitActionPerformed
-        try {
-            exit();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Erro ao tentar sair!\n"+e);
-        }
-    }//GEN-LAST:event_miExitActionPerformed
-
-    private void miSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miSaveActionPerformed
-        saveFile();
-    }//GEN-LAST:event_miSaveActionPerformed
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        try {
-            exit();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Erro ao tentar sair!\n"+e);
-        }
-    }//GEN-LAST:event_formWindowClosing
-
-    public void run() {
-        lookAndFeel();
         
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JLabel lbSaveStatus;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenu menuFiles;
+    private javax.swing.JMenu menuFile;
     private javax.swing.JMenuItem miExit;
+    private javax.swing.JMenuItem miFont;
     private javax.swing.JMenuItem miNew;
     private javax.swing.JMenuItem miOpen;
     private javax.swing.JMenuItem miSave;
     private javax.swing.JMenuItem miSaveAs;
-    private javax.swing.JScrollPane scrollPane;
-    private javax.swing.JPopupMenu.Separator separator;
-    private javax.swing.JTextArea textArea;
+    private javax.swing.JMenuItem miTheme;
+    private javax.swing.JTextArea taText;
+    private javax.swing.JTextField tfPath;
     // End of variables declaration//GEN-END:variables
 
-    private void newFile() {
-        if(checkFile()){
-            discartFile();
-            setTitle("Textoise - [Texto temporário]");
+    private void SaveAs() throws IOException {
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivo de Texto (*.txt)", "txt");
+        fileChooser.setFileFilter(filter);
+        int result = fileChooser.showSaveDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            textFile = fileChooser.getSelectedFile();
+            if (!textFile.getName().endsWith(".txt")) {
+                textFile = new File(textFile.getAbsolutePath() + ".txt");
+            }
+            // Obtém a string que será salva no arquivo
+            String text = taText.getText();
+            try ( // Salva a string no arquivo
+                BufferedWriter writer = new BufferedWriter(new FileWriter(textFile))) {
+                writer.write(text);
+                writer.close();
+            }
+            tfPath.setText(textFile.getAbsolutePath());
+            changeSaved(true);
         }
     }
     
-    private boolean checkFile(){
-        return !textArea.getText().equals("") || archive!=null;
-    }
-    private boolean discartFile() {
-        if(JOptionPane.showConfirmDialog(rootPane, "Descartar alterações?","Novo",JOptionPane.YES_NO_OPTION)==0){
-            textArea.setText("");
-            archive = null;
-            setTitle("Textoise");
-            return true;
-        }
-        return false;
-    }
-
-    private void openFile() {
-        if(checkFile()){
-            if(discartFile()){
-                try {
-                    openOperation();
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(rootPane, "Erro ao tentar abrir arquivo!\n"+e);
-                }
-            }
-        }else{
+    private void Save() throws IOException {
+        if (textFile == null) {
             try {
-                openOperation();
+                SaveAs();
             } catch (IOException e) {
-                JOptionPane.showMessageDialog(rootPane, "Erro ao tentar abrir arquivo!\n"+e);
+                JOptionPane.showMessageDialog(rootPane, "Erro ao tentar realizar operação!\n"+e);
+            }
+        } else {
+            String text = taText.getText();
+            try (
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(textFile))) {
+                writer.write(text);
+                writer.close();
+                changeSaved(true);
             }
         }
     }
-
     
-
-    private void openOperation() throws IOException {
-        JFileChooser fc = new JFileChooser();
-        if(fc.showOpenDialog(miOpen)==0){
-            archive = fc.getSelectedFile();
-            try (FileReader fr = new FileReader(archive); BufferedReader br = new BufferedReader(fr)) {
-                String text = "";
-                while(br.ready()){
-                    text += br.readLine();
-                    if(br.ready()){
-                        text += "\n";
+    private void changeSaved(boolean status) {
+        if (status) {
+            lbSaveStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/stSaveFilled.png")));
+            textSaved = true;
+        } else {
+            lbSaveStatus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/stSaveEmpty.png")));
+            textSaved = false;
+        }
+    }
+    
+    private void NewText() {
+        if (textSaved) {
+            textFile = null;
+            CleanAll();
+        } else {
+            int choose = JOptionPane.showConfirmDialog(rootPane, "Salvar alterações do texto atual?", "Textoise", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (choose == 0) {//0-yes 1-no 2-cancel
+                try {
+                    Save();
+                    CleanAll();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao tentar realizar operação!\n"+ex);
+                }
+            }
+            if (choose == 1) {
+                CleanAll();
+            }
+        }
+    }
+    
+    private void CleanAll() {
+        textFile = null;
+        taText.setText("");
+        tfPath.setText("");
+        changeSaved(true);
+    }
+    private void Open(){
+        if (textSaved) {
+            try {
+                OpenFile();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(rootPane, "Erro ao tentar realizar operação!\n"+ex);
+            }
+        } else {
+            int choose = JOptionPane.showConfirmDialog(rootPane, "Salvar alterações do texto atual?", "Textoise", JOptionPane.YES_NO_CANCEL_OPTION);
+            if (choose == 0) {//0-yes 1-no 2-cancel
+                try {
+                    Save();
+                    try {
+                        OpenFile();
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(rootPane, "Erro ao tentar realizar operação!\n"+ex);
                     }
-                }
-                br.close();
-                fr.close();
-                textArea.setText(text);
-                setTitle("Textoise - "+archive.getPath());
-            }
-        }
-    }
-
-    private void exit() throws IOException {
-        FileWriter fw = new FileWriter(appData);
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(textArea.getText());
-        bw.close();
-        fw.close();
-        System.exit(0);
-    }
-
-    private void saveFile() {
-        if(archive==null){
-            try {
-                saveAsOperation();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(rootPane, "Erro ao salvar arquivo!\n"+e);
-            }
-        }else{
-            try {
-                saveOperation();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(rootPane, "Erro ao salvar arquivo!\n"+e);
-            }
-        }
-    }
-
-    private void saveAsOperation() throws IOException {
-        JFileChooser fc = new JFileChooser();
-        if(fc.showSaveDialog(miSaveAs)==0){
-            archive = fc.getSelectedFile();
-            String finalPath = archive.getPath();
-            if(!archive.getPath().endsWith(".txt")){
-                finalPath = archive.getPath()+".txt";
-            }
-            FileWriter fw = new FileWriter(finalPath);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(textArea.getText());
-            bw.close();
-            fw.close();
-            setTitle("Textoise - "+archive.getPath());
-        }
-    }
-
-    private void saveOperation() throws IOException {
-        String finalPath = archive.getPath();
-        if(!archive.getPath().endsWith(".txt"))
-            finalPath = archive.getPath()+".txt";
-        FileWriter fw = new FileWriter(finalPath);
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.write(textArea.getText());
-        bw.close();
-        fw.close();
-    }
-
-    private void temporaryText() throws IOException {
-        if (!new File(appData).exists()) {
-            new File(System.getenv("APPDATA")+"/Textoise").mkdir();
-            FileWriter fw = new FileWriter(appData);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(textArea.getText());
-            bw.close();
-            fw.close();
-        }else{
-            FileReader fr = new FileReader(appData);
-            BufferedReader br = new BufferedReader(fr);
-            String text = "";
-            while(br.ready()){
-                text += br.readLine();
-                if(br.ready()){
-                    text += "\n";
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao tentar realizar operação!\n"+ex);
                 }
             }
-            br.close();
-            fr.close();
-            textArea.setText(text);
-            setTitle("Textoise - [Texto temporário]");
+            if (choose == 1) {
+                try {
+                    OpenFile();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "Erro ao tentar realizar operação!\n"+ex);
+                }
+            }
         }
     }
+    
+    private void OpenFile() throws FileNotFoundException, IOException {
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivo de Texto (*.txt)", "txt");
+        fileChooser.setFileFilter(filter);
+        int result = fileChooser.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            textFile = fileChooser.getSelectedFile();
+            // Verifica se o arquivo tem extensão .txt
+            if (!textFile.getName().endsWith(".txt")) {
+                System.out.println("O arquivo selecionado não tem extensão .txt.");
+                return;
+            }
+            // Lê o conteúdo do arquivo para uma String
+            StringBuilder conteudoArquivo = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new FileReader(textFile))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    conteudoArquivo.append(line).append("\n");
+                }
+            }
+            String content = conteudoArquivo.toString();
+            taText.setText(content);
+            tfPath.setText(textFile.getAbsolutePath());
+            changeSaved(true);
+        }
+    }
+    
+    public void ChangeFont(Font newFont){
+        taText.setFont(newFont);
+    }
+
+    private void LoadFont() {
+        String appDataDir = System.getenv("APPDATA");
+        String filePath = appDataDir + "\\Textoise.txt";
+        File file = new File(filePath);
+        if (file.exists()) {
+            System.out.println("O arquivo já existe.");
+        } else {
+            try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+                writer.println("Olá, mundo!");
+                System.out.println("O arquivo foi criado com sucesso.");
+            } catch (IOException e) {
+                System.out.println("Não foi possível criar o arquivo.");
+            }
+        }
+    }
+    
 }
